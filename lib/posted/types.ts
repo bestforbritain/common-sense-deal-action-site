@@ -48,6 +48,7 @@ export type Letter = {
   stannpPdfUrl: string | null;
   stannpStatus: string | null;
   failureReason: string | null;
+  anonymisedAt: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -69,6 +70,7 @@ export type NewLetter = Omit<
   | "stannpPdfUrl"
   | "stannpStatus"
   | "failureReason"
+  | "anonymisedAt"
   | "createdAt"
   | "updatedAt"
   | "pdfPath"

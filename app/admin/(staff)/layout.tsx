@@ -21,6 +21,7 @@ export default async function StaffLayout({ children }: LayoutProps<"/admin">) {
       )}
       <nav className={styles.nav} aria-label="Admin">
         <Link href="/admin">Letters</Link>
+        <Link href="/admin/stats">Stats and exports</Link>
         <Link href="/admin/settings">Settings</Link>
         <Link href="/admin/audit">Audit log</Link>
         <span>{admin.email}</span>

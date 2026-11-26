@@ -25,7 +25,7 @@ npm run stannp:proof   # Stannp test-mode proofs for both recipients (needs STAN
 - `data/constituencies.json` holds all 650 constituencies with their MPs. It's used when Supabase isn't configured (local development and tests). Regenerate it with `npm run snapshot`.
 - In production, `/api/cron/refresh-mps` runs daily at 04:00 (see `vercel.json`) and writes the same data to the Supabase `constituencies` table. If the data doesn't validate (650 rows, every name matched to an ONS code), nothing is written.
 - The schema is in `supabase/migrations/`. Every table has row-level security on and no public policies: only the server, using the service role, can read or write.
-- Environment variables are listed in `.env.example`. Hosting setup (Vercel, Supabase, Turnstile) is in `docs/hosting-setup.md`.
+- Environment variables are listed in `.env.example`. Hosting setup (Vercel, Supabase, Turnstile) is in `docs/hosting-setup.md`. Before launch, see `docs/launch-checklist.md`, `docs/privacy-review.md` and `docs/accessibility.md`.
 
 ## Where things live
 

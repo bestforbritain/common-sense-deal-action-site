@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { sectors, findSector } from "@/content/sectors";
 import { requireAdmin } from "@/lib/admin/auth";
+import { flagLabels, type Flag } from "@/lib/moderation";
 import { getPostedStore } from "@/lib/posted/store";
 import type { LetterFilter, LetterStatus, RecipientType } from "@/lib/posted/types";
 import { approveAction } from "../actions";
@@ -118,7 +119,7 @@ export default async function LettersPage({ searchParams }: PageProps<"/admin">)
                     </td>
                     <td>{findSector(l.sector)?.name ?? l.sector}</td>
                     <td>{l.constituencyName}</td>
-                    <td className={styles.flag}>{l.flags.join(", ")}</td>
+                    <td className={styles.flag}>{l.flags.map((f) => flagLabels[f as Flag] ?? f).join(", ")}</td>
                     <td>
                       <Link href={`/admin/letters/${l.id}`}>Open</Link>
                     </td>

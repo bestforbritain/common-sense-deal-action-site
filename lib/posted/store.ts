@@ -17,6 +17,8 @@ export interface PostedStore {
   getLetterByTokenHash(hash: string): Promise<Letter | null>;
   getPdf(letter: Letter): Promise<Uint8Array>;
   listLetters(filter: LetterFilter, limit?: number): Promise<Letter[]>;
+  /** Every letter, for stats and exports. */
+  allLetters(): Promise<Letter[]>;
   /** Atomic: updates only if the letter is currently in one of `from`. Returns null otherwise. */
   transition(id: string, from: LetterStatus[], patch: Partial<Letter>): Promise<Letter | null>;
   getSettings(): Promise<Settings>;
@@ -25,11 +27,36 @@ export interface PostedStore {
   spendPence(): Promise<number>;
   /** Letters accepted by Stannp since midnight UTC. */
   sentTodayCount(): Promise<number>;
+  getLetterByStannpId(stannpId: number): Promise<Letter | null>;
+  /** Records a webhook delivery; false if it was already processed. */
+  markWebhookEvent(webhookId: string): Promise<boolean>;
+  /** Letters in a final state, created before `before`, not yet anonymised. */
+  listForRetention(before: Date, limit?: number): Promise<Letter[]>;
+  /** Removes a letter's personal data and PDF, keeping sector, constituency, recipient and status. */
+  anonymise(letter: Letter): Promise<void>;
   addAudit(entry: Omit<AuditEntry, "id" | "createdAt">): Promise<void>;
   listAudit(limit?: number): Promise<AuditEntry[]>;
 }
 
 const DEFAULT_SETTINGS: Settings = { autoSend: false, livePosting: false, dailyCap: null, totalBudgetPence: null, updatedAt: null, updatedBy: null };
+
+export const FINAL_STATUSES: LetterStatus[] = ["sent", "dispatched", "returned", "failed", "rejected", "expired"];
+
+export const ANONYMISED: Partial<Letter> = {
+  senderName: "",
+  senderRole: "",
+  businessName: "",
+  businessAddress: "",
+  email: null as unknown as string,
+  letterText: null as unknown as string,
+};
+
+// The token hash column is unique, so each anonymised letter gets its own placeholder.
+const anonymisedFields = (letter: Letter): Partial<Letter> => ({
+  ...ANONYMISED,
+  confirmTokenHash: `anonymised:${letter.id}`,
+  anonymisedAt: new Date().toISOString(),
+});
 
 export function validateSettings(s: Settings): string | null {
   if (s.autoSend && s.totalBudgetPence === null) return "Set a total budget cap before switching on auto-send.";
@@ -46,7 +73,7 @@ const startOfTodayUtc = () => {
 
 // ---------------------------------------------------------------- in memory
 
-type Memory = { letters: Map<string, Letter>; pdfs: Map<string, Uint8Array>; settings: Settings; audit: AuditEntry[] };
+type Memory = { letters: Map<string, Letter>; pdfs: Map<string, Uint8Array>; settings: Settings; audit: AuditEntry[]; webhooks?: Set<string> };
 const globalMemory = globalThis as unknown as { __csdPostedStore?: Memory };
 
 export function createMemoryStore(memory: Memory = { letters: new Map(), pdfs: new Map(), settings: { ...DEFAULT_SETTINGS }, audit: [] }): PostedStore {
@@ -77,6 +104,7 @@ export function createMemoryStore(memory: Memory = { letters: new Map(), pdfs: n
         stannpPdfUrl: null,
         stannpStatus: null,
         failureReason: null,
+        anonymisedAt: null,
         createdAt: now,
         updatedAt: now,
       };
@@ -104,6 +132,9 @@ export function createMemoryStore(memory: Memory = { letters: new Map(), pdfs: n
         .slice(0, limit)
         .map((l) => ({ ...l }));
     },
+    async allLetters() {
+      return [...memory.letters.values()].map((l) => ({ ...l }));
+    },
     async transition(id, from, patch) {
       const l = memory.letters.get(id);
       if (!l || !from.includes(l.status)) return null;
@@ -127,6 +158,28 @@ export function createMemoryStore(memory: Memory = { letters: new Map(), pdfs: n
     async sentTodayCount() {
       const since = startOfTodayUtc().toISOString();
       return [...memory.letters.values()].filter((l) => l.sentAt && l.sentAt >= since).length;
+    },
+    async getLetterByStannpId(stannpId) {
+      for (const l of memory.letters.values()) if (l.stannpId === stannpId && stannpId !== 0) return { ...l };
+      return null;
+    },
+    async markWebhookEvent(webhookId) {
+      memory.webhooks ??= new Set();
+      if (memory.webhooks.has(webhookId)) return false;
+      memory.webhooks.add(webhookId);
+      return true;
+    },
+    async listForRetention(before, limit = 500) {
+      return [...memory.letters.values()]
+        .filter((l) => FINAL_STATUSES.includes(l.status) && !l.anonymisedAt && l.createdAt < before.toISOString())
+        .slice(0, limit)
+        .map((l) => ({ ...l }));
+    },
+    async anonymise(letter) {
+      const l = memory.letters.get(letter.id);
+      if (!l) return;
+      memory.pdfs.delete(l.pdfPath);
+      memory.letters.set(l.id, { ...l, ...anonymisedFields(l) });
     },
     async addAudit(entry) {
       memory.audit.unshift({ ...entry, id: memory.audit.length + 1, createdAt: new Date().toISOString() });
@@ -192,6 +245,14 @@ function createSupabaseStore(db: SupabaseClient): PostedStore {
       if (filter.sector) q = q.eq("sector", filter.sector);
       return (check(await q, "Listing letters") ?? []).map((r) => fromRow<Letter>(r));
     },
+    async allLetters() {
+      const rows: Letter[] = [];
+      for (let from = 0; ; from += 1000) {
+        const data = check(await db.from("letters").select().order("created_at").range(from, from + 999), "Reading letters");
+        rows.push(...(data ?? []).map((r) => fromRow<Letter>(r)));
+        if (!data || data.length < 1000) return rows;
+      }
+    },
     async transition(id, from, patch) {
       const data = check(
         await db.from("letters").update(letterToRow({ ...patch, updatedAt: new Date().toISOString() })).eq("id", id).in("status", from).select().maybeSingle(),
@@ -217,6 +278,32 @@ function createSupabaseStore(db: SupabaseClient): PostedStore {
       const { count, error } = await db.from("letters").select("id", { count: "exact", head: true }).gte("sent_at", startOfTodayUtc().toISOString());
       if (error) throw new Error(`Counting letters: ${error.message}`);
       return count ?? 0;
+    },
+    async getLetterByStannpId(stannpId) {
+      if (!stannpId) return null;
+      const data = check(await db.from("letters").select().eq("stannp_id", stannpId).maybeSingle(), "Reading a letter");
+      return data ? fromRow<Letter>(data) : null;
+    },
+    async markWebhookEvent(webhookId) {
+      const { error } = await db.from("webhook_events").insert({ webhook_id: webhookId });
+      if (!error) return true;
+      if (error.code === "23505") return false;
+      throw new Error(`Recording a webhook: ${error.message}`);
+    },
+    async listForRetention(before, limit = 500) {
+      const data = check(
+        await db.from("letters").select().in("status", FINAL_STATUSES).is("anonymised_at", null).lt("created_at", before.toISOString()).limit(limit),
+        "Listing letters for retention",
+      );
+      return (data ?? []).map((r) => fromRow<Letter>(r));
+    },
+    async anonymise(letter) {
+      const removed = await db.storage.from("letters").remove([letter.pdfPath]);
+      if (removed.error) throw new Error(`Deleting a PDF: ${removed.error.message}`);
+      check(
+        await db.from("letters").update(letterToRow(anonymisedFields(letter))).eq("id", letter.id),
+        "Anonymising a letter",
+      );
     },
     async addAudit(entry) {
       check(await db.from("audit_log").insert(toRow(entry)), "Writing the audit log");

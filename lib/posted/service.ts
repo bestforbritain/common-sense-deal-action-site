@@ -12,6 +12,7 @@ import { findSector } from "@/content/sectors";
 import { getConstituencyBySlug } from "@/lib/constituencies/store";
 import type { Constituency, Mp } from "@/lib/constituencies/types";
 import { sendEmail } from "@/lib/mailer";
+import { flagsFor } from "@/lib/moderation";
 import { renderLetterPdf } from "@/lib/pdf/letterPdf";
 import { postLetter, type StannpRecipient } from "@/lib/stannp";
 import { isEmailFormat } from "@/lib/validation";
@@ -153,7 +154,7 @@ export async function submitLetter(
         email: input.email.trim(),
         letterText: input.letterText,
         pdfSha256: rendered.sha256,
-        flags: [],
+        flags: flagsFor([input.letterText, input.senderName, input.role, input.businessName, input.businessAddress]),
         confirmTokenHash: hashToken(token),
         confirmExpiresAt: new Date(now.getTime() + CONFIRM_HOURS * 3600_000).toISOString(),
       },
@@ -165,11 +166,18 @@ export async function submitLetter(
   }
 
   const values = { name: letter.senderName, recipient: letter.recipientName, link: `${options.origin}/letters/confirm/${token}` };
-  await sendEmail({
-    to: letter.email,
-    subject: fill(emailCopy.confirm.subject, values),
-    text: emailCopy.confirm.body.map((line) => fill(line, values)).join("\n\n"),
-  });
+  try {
+    await sendEmail({
+      to: letter.email,
+      subject: fill(emailCopy.confirm.subject, values),
+      text: emailCopy.confirm.body.map((line) => fill(line, values)).join("\n\n"),
+    });
+  } catch (error) {
+    // Without the email the letter can never be confirmed. Set it aside so it doesn't
+    // count as a duplicate when the sender tries again.
+    await store.transition(letter.id, ["awaiting_confirmation"], { status: "expired", failureReason: "Confirmation email could not be sent" });
+    throw error;
+  }
   return { ok: true, letterId: letter.id };
 }
 

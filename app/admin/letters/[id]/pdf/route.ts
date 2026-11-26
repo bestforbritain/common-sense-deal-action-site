@@ -8,6 +8,7 @@ export async function GET(_request: Request, { params }: RouteContext<"/admin/le
   const store = getPostedStore();
   const letter = await store.getLetter(id);
   if (!letter) return new Response("Not found", { status: 404 });
+  if (letter.anonymisedAt) return new Response("This letter's PDF was deleted under the retention policy.", { status: 410 });
   const pdf = await store.getPdf(letter);
   return new Response(pdf as BodyInit, {
     headers: { "content-type": "application/pdf", "content-disposition": `inline; filename="${id}.pdf"`, "cache-control": "private, no-store" },

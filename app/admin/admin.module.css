@@ -134,3 +134,26 @@
   background: var(--colour-red);
   color: var(--colour-white);
 }
+
+.statsGrid {
+  display: grid;
+  gap: 1.5rem 3rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 64rem) {
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.caption {
+  padding-bottom: 0.5rem;
+  font-weight: 800;
+  text-align: left;
+}
+
+.number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

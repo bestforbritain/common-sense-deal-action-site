@@ -31,6 +31,7 @@ Colleagues then need to be members of the Best for Britain Vercel team, or be gi
    1. `supabase/migrations/0001_constituencies_and_rate_limits.sql`
    2. `supabase/migrations/0002_email_sends_and_optins.sql`
    3. `supabase/migrations/0003_letters_settings_audit.sql`, which also creates the private `letters` storage bucket for the PDFs
+   4. `supabase/migrations/0004_webhooks_retention.sql`
 4. Open **Project Settings** → **API** and keep the page open for step 3. You'll need:
    - **Project URL**
    - **anon** (or "publishable") key, used for admin sign-in
@@ -105,6 +106,8 @@ STANNP_API_KEY="paste-the-key-here" npm run stannp:proof
 ```
 
 The proofs are saved to `phase4/stannp-proofs/`.
+
+Webhook: in Stannp's settings, add a webhook to `https://{site}/api/webhooks/stannp` for **mailpiece_status**, with a secret. Put the same secret in Vercel as `STANNP_WEBHOOK_SECRET` (**Sensitive**). Without it, the site refuses webhook calls.
 
 ## 7. Later
 

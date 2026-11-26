@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { findSector } from "@/content/sectors";
 import { requireAdmin } from "@/lib/admin/auth";
+import { flagLabels, type Flag } from "@/lib/moderation";
 import { getPostedStore } from "@/lib/posted/store";
 import { approveAction, rejectAction, requeueAction } from "../../../actions";
 import formStyles from "@/components/form.module.css";
@@ -35,7 +36,13 @@ export default async function LetterPage({ params }: PageProps<"/admin/letters/[
             {letter.flags.length > 0 && (
               <>
                 <dt>Flags</dt>
-                <dd className={styles.flag}>{letter.flags.join(", ")}</dd>
+                <dd className={styles.flag}>{letter.flags.map((f) => flagLabels[f as Flag] ?? f).join(", ")}</dd>
+              </>
+            )}
+            {letter.anonymisedAt && (
+              <>
+                <dt>Personal data</dt>
+                <dd>Removed {when(letter.anonymisedAt)} under the retention policy</dd>
               </>
             )}
             <dt>Posted to</dt>
@@ -118,6 +125,7 @@ export default async function LetterPage({ params }: PageProps<"/admin/letters/[
           )}
         </div>
 
+        {!letter.anonymisedAt && (
         <div>
           <h2>The PDF that is posted</h2>
           <iframe className={styles.pdf} src={`/admin/letters/${letter.id}/pdf`} title={`PDF of the letter from ${letter.senderName}`} />
@@ -125,6 +133,7 @@ export default async function LetterPage({ params }: PageProps<"/admin/letters/[
             <a href={`/admin/letters/${letter.id}/pdf`}>Open the PDF</a>
           </p>
         </div>
+        )}
       </div>
     </>
   );

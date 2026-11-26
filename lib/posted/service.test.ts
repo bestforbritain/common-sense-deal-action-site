@@ -101,6 +101,15 @@ describe("submitLetter", () => {
   });
 });
 
+describe("when the confirmation email fails", () => {
+  it("sets the letter aside so the sender can try again", async () => {
+    vi.mocked(sendEmail).mockRejectedValueOnce(new Error("provider down"));
+    await expect(submitLetter({ ...input(), previewSha256: sha }, { origin: "", store })).rejects.toThrow("provider down");
+    expect((await store.listLetters({}))[0]).toMatchObject({ status: "expired", failureReason: "Confirmation email could not be sent" });
+    expect((await submitLetter({ ...input(), previewSha256: sha }, { origin: "", store })).ok).toBe(true);
+  });
+});
+
 describe("confirmLetter", () => {
   it("moves the letter to awaiting approval, once", async () => {
     const { id, token } = await submitted();

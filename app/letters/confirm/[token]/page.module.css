@@ -1,0 +1,13 @@
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 3rem var(--gutter) 0;
+}
+
+.page > * {
+  max-width: var(--measure);
+}
+
+.page p {
+  font-size: 1.125rem;
+}

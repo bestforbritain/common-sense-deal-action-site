@@ -65,3 +65,26 @@
   font-size: 1.375rem;
   font-weight: 800;
 }
+
+.fieldset {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend {
+  padding: 0;
+}
+
+.preview {
+  margin-top: 2rem;
+}
+
+.previewFrame {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  aspect-ratio: 210 / 297;
+  border: 2px solid var(--colour-navy);
+  background: var(--colour-white);
+}

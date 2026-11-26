@@ -12,6 +12,8 @@ import { getSupabase } from "@/lib/supabase";
 export type RateLimitRule = { route: string; windowSeconds: number; max: number };
 
 export const LOOKUP_RATE_LIMIT: RateLimitRule = { route: "lookup", windowSeconds: 600, max: 30 };
+export const PREVIEW_RATE_LIMIT: RateLimitRule = { route: "letter-preview", windowSeconds: 600, max: 40 };
+export const SUBMIT_RATE_LIMIT: RateLimitRule = { route: "letter-submit", windowSeconds: 3600, max: 5 };
 export const EMAIL_SENT_RATE_LIMIT: RateLimitRule = { route: "email-sent", windowSeconds: 3600, max: 10 };
 
 const memory = new Map<string, { windowStart: number; hits: number }>();

@@ -27,12 +27,15 @@ Colleagues then need to be members of the Best for Britain Vercel team, or be gi
    - Name: `common-sense-deal-action-site`
    - Region: **West EU (London)**, so personal data stays in the UK
    - Database password: generate one and save it in Best for Britain's password manager. It isn't needed in Vercel.
-3. When the project is ready, open **SQL Editor** and run these two files from the repository, **in this order**. Paste each file's contents and click **Run**:
+3. When the project is ready, open **SQL Editor** and run these files from the repository, **in this order**. Paste each file's contents and click **Run**:
    1. `supabase/migrations/0001_constituencies_and_rate_limits.sql`
    2. `supabase/migrations/0002_email_sends_and_optins.sql`
+   3. `supabase/migrations/0003_letters_settings_audit.sql`, which also creates the private `letters` storage bucket for the PDFs
 4. Open **Project Settings** → **API** and keep the page open for step 3. You'll need:
    - **Project URL**
+   - **anon** (or "publishable") key, used for admin sign-in
    - **service_role** key (secret: it bypasses row-level security, so it must only ever go into Vercel's server-side settings)
+5. Admin sign-in: go to **Authentication** → **URL Configuration** and add the live site address plus `https://*.vercel.app/admin/auth/callback` to **Redirect URLs**. Under **Providers**, check **Email** is on.
 
 ## 3. Vercel: environment variables
 
@@ -44,6 +47,8 @@ In Vercel → project → **Settings** → **Environment Variables**, add the fo
 | --- | --- |
 | `SUPABASE_URL` | Project URL from Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | service_role key from Supabase (mark as **Sensitive**) |
+| `SUPABASE_ANON_KEY` | anon or publishable key from Supabase |
+| `ADMIN_EMAILS` | Staff who can use `/admin`, comma-separated, e.g. `name@bestforbritain.org,other@bestforbritain.org` |
 
 ### Generated secrets (run these in Terminal)
 
@@ -89,7 +94,19 @@ Needed before launch. Without it, the live site refuses "I've sent it" (and, lat
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Site key (public) |
 | `TURNSTILE_SECRET_KEY` | Secret key (mark as **Sensitive**) |
 
-## 6. Later
+## 6. Stannp (test mode first)
+
+1. Whoever holds Best for Britain's Stannp account adds `STANNP_API_KEY` in Vercel (Production and Preview, **Sensitive**).
+2. **Do not add `STANNP_LIVE`** until launch. Letters are only posted for real when `STANNP_LIVE` is `true`, the admin "Live posting" setting is on, **and** it's the live deployment. Otherwise every letter goes to Stannp in test mode: a sample PDF, nothing printed, nothing charged.
+3. To get Stannp's test-mode proofs for both recipients on your own computer, run this in Terminal from the project folder. It pastes nothing into the code, and it always uses test mode:
+
+```bash
+STANNP_API_KEY="paste-the-key-here" npm run stannp:proof
+```
+
+The proofs are saved to `phase4/stannp-proofs/`.
+
+## 7. Later
 
 - **Separate Supabase project for previews:** at the moment, previews and production share one database. Before launch, consider a second project for previews, so test submissions don't mix with real ones.
 - **Custom domain:** add the subdomain in Vercel → **Settings** → **Domains** once it's agreed.

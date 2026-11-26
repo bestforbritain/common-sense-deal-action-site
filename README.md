@@ -11,7 +11,14 @@ npm test           # unit tests (Vitest)
 npm run lint
 npm run build
 npm run snapshot   # refresh data/constituencies.json from the Members API
+npm run stannp:proof   # Stannp test-mode proofs for both recipients (needs STANNP_API_KEY)
 ```
+
+## Posted letters and admin
+
+- Flow: preview (the exact A4 PDF) → submit → confirmation email → staff approval at `/admin` → `postLetter()` → Stannp.
+- `lib/stannp.ts` holds the Stannp safety rule. Every create call goes through `postLetter()`, which sends `test=true` unless `STANNP_LIVE` is `true`, the "Live posting" setting is on, and it's the live deployment. `lib/stannp.test.ts` checks every combination.
+- Locally, without Supabase, letters are kept in memory, emails appear at `/dev/outbox`, and `/admin` signs you in as `dev@localhost`.
 
 ## MP data
 

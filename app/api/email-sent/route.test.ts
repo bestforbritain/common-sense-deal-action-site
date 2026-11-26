@@ -52,8 +52,8 @@ describe("POST /api/email-sent", () => {
     expect((await post(body)).status).toBe(400);
   });
 
-  it("refuses submissions in production when Turnstile isn't configured", async () => {
-    vi.stubEnv("NODE_ENV", "production");
+  it("refuses submissions on the live site when Turnstile isn't configured", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
     vi.stubEnv("TURNSTILE_SECRET_KEY", "");
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect((await post({ constituencySlug: "manchester-central", sectorSlug: "retail" })).status).toBe(403);

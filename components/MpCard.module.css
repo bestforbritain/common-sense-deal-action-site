@@ -1,0 +1,61 @@
+.card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  /* The site's one deliberate piece of motion: the MP card settles into place. */
+  animation: arrive 450ms ease-out both;
+}
+
+.card:has(> div:only-child) {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 48rem) {
+  .card {
+    gap: 2rem;
+  }
+}
+
+.photo {
+  width: 5.5rem;
+  height: 5.5rem;
+  object-fit: cover;
+  object-position: top;
+  background: var(--colour-cream);
+}
+
+@media (min-width: 48rem) {
+  .photo {
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
+  line-height: 1.1;
+}
+
+.note {
+  max-width: var(--measure);
+  margin: 0.75rem 0 0;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+}

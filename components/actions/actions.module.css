@@ -1,0 +1,67 @@
+.action {
+  max-width: 46rem;
+  padding: 1.5rem 0;
+  border-top: 2px solid var(--colour-navy);
+}
+
+.action h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  line-height: 1.15;
+}
+
+.action p:last-child {
+  margin-bottom: 0;
+}
+
+.comingSoon {
+  padding: 0.75rem 1rem;
+  background: var(--colour-cream);
+}
+
+.composer {
+  margin-top: 1.5rem;
+}
+
+.stepHeading {
+  margin: 2rem 0 1rem;
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: var(--tracking-tight);
+}
+
+.composer > .stepHeading:first-child {
+  margin-top: 0;
+}
+
+.sendButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.sendButtons > a:first-child {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.sendButtons > a:first-child:hover {
+  color: var(--colour-white);
+}
+
+.sent {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: var(--colour-cream);
+}
+
+.sent .stepHeading {
+  margin-top: 0;
+}
+
+.sentThanks {
+  font-size: 1.375rem;
+  font-weight: 800;
+}

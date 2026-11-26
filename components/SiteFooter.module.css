@@ -1,0 +1,36 @@
+.footer {
+  margin-top: 4rem;
+  border-top: 1px solid rgb(31 18 71 / 0.15);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  align-items: baseline;
+  justify-content: space-between;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 2rem var(--gutter) 2.5rem;
+}
+
+.organisation {
+  margin: 0;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links a {
+  color: var(--colour-red);
+}
+
+.links a:hover {
+  color: var(--colour-navy);
+}

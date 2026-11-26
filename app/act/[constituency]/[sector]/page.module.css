@@ -1,0 +1,11 @@
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 2.5rem var(--gutter) 0;
+}
+
+@media (min-width: 60rem) {
+  .page {
+    padding-top: 4rem;
+  }
+}

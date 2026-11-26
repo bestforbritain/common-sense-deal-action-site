@@ -1,0 +1,24 @@
+.header {
+  background: var(--colour-navy);
+}
+
+.inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 1.25rem var(--gutter);
+}
+
+.logoLink {
+  display: block;
+  width: min(100%, 36.5rem);
+}
+
+.logoLink:focus-visible {
+  outline-color: var(--colour-white);
+}
+
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}

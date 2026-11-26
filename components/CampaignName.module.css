@@ -1,0 +1,7 @@
+.csd {
+  padding: 0 0.2em;
+  background: var(--colour-red);
+  color: var(--colour-white);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

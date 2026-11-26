@@ -1,0 +1,139 @@
+/*
+ * Design tokens taken from commonsensedeal.com (Phase 0, 26 November 2026).
+ * See phase0/phase0-report.md, section 5.
+ */
+:root {
+  --colour-navy: #1f1247;
+  --colour-red: #e22426;
+  --colour-red-dark: #b81b1d; /* hover/active state for red buttons */
+  --colour-white: #ffffff;
+  --colour-cream: #fdf0e6;
+  --colour-error: #b81b1d;
+
+  --font-sans: var(--font-barlow), "Helvetica Neue", Arial, sans-serif;
+
+  /* Type scale: desktop values from the live site, scaled down with clamp() for mobile. */
+  --text-body: 1rem; /* 16px */
+  --leading-body: 1.5; /* 24px */
+  --text-h1: clamp(2.5rem, 1.6rem + 3.2vw, 4.15rem); /* 45px mobile → 66.4px desktop */
+  --leading-h1: 1.056;
+  --text-h2: clamp(1.75rem, 1.4rem + 1.4vw, 2.26rem); /* → 36.16px */
+  --text-panel: clamp(1.25rem, 1.1rem + 0.5vw, 1.4rem);
+  --leading-panel: 1.25;
+  --text-button: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --tracking-tight: -0.02em;
+
+  --measure: 40rem;
+  --page-max: 75rem;
+  --gutter: 1rem;
+  --focus-ring: 3px solid var(--colour-navy);
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2.25rem;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--colour-white);
+  color: var(--colour-navy);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: var(--leading-body);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 0.5em;
+  font-weight: 800;
+  letter-spacing: var(--tracking-tight);
+}
+
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--leading-h1);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: 1.15;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--colour-red);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--colour-red);
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 3px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 1rem 1.5rem;
+  background: var(--colour-white);
+  color: var(--colour-navy);
+  font-weight: 700;
+  transform: translateY(-120%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

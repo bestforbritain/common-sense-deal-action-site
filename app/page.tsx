@@ -25,14 +25,6 @@ export default function HomePage() {
           <a href={home.why.sourceUrl}>{home.why.sourceLabel}</a>
         </p>
 
-        <div>
-          {home.below.paragraphs.map((p, i) => (
-            <p key={i}>
-              <RichText text={p} />
-            </p>
-          ))}
-        </div>
-
         <p className={styles.prompt}>
           <RichText text={home.below.prompt} />
         </p>

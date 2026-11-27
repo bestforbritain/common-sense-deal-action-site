@@ -41,9 +41,11 @@ export const copy = {
 
     why: {
       heading: "Why EU membership is common sense",
-      // Block 1, verbatim from the brief except the £92bn sentence, changed on
+      // Verbatim from the brief. The business paragraph (from block 2) moved to the top on
+      // 27 November 2026; the rest of block 2 was removed. The £92bn sentence was changed on
       // 26 November 2026 to say "in the long run". [TODO JOSHUA: approve this wording]
       paragraphs: [
+        "If you run a business you’ll find that buying and selling parts, or selling your finished products, becomes faster and cheaper if the UK and the EU agree a {csd}. There will be fewer forms to fill in and transport costs will go down - mostly because ports like Dover won’t be bogged down with paperwork.",
         "Red tape moving car parts from Germany shouldn’t cost jobs at car plants in Luton. British goods destined for French shops shouldn’t get stuck for twenty hours at Dover. And you shouldn’t be stopped from working or travelling in places like Paris, Barcelona, or Berlin.",
         "It’s just common sense.",
         "Our current deal with the EU is causing too much hassle for ordinary people and business owners.",
@@ -55,15 +57,7 @@ export const copy = {
       sourceUrl: "https://bestforbritain.org/publication/eu-uk-integration/",
     },
 
-    // Block 2, verbatim from the brief.
     below: {
-      paragraphs: [
-        "If you run a business you’ll find that buying and selling parts, or selling your finished products, becomes faster and cheaper if the UK and the EU agree a {csd}. There will be fewer forms to fill in and transport costs will go down - mostly because ports like Dover won’t be bogged down with paperwork.",
-        "As a customer you might notice that prices go down, or find a bigger range of products in your local supermarket. If you’re a motorist you might find that certain cars, that haven’t been on sale in the UK since 2019, start to be sold here again.",
-        "And if the economy grows because a {csd} is struck, there won’t be so much need to cut public services that you and your family use.",
-        "Wherever our current deal with the EU has made it harder for ordinary people to go about their lives, or buy the products that they want to, EU membership will deliver clarity and ease.",
-        "It’s just common sense.",
-      ],
       // [TODO JOSHUA: approve] The prompt that takes people back to the form.
       prompt: "Tell your MP what a {csd} would mean for your business.",
       promptLink: "Find my MP",

@@ -6,7 +6,7 @@ Work through this top to bottom. **Live posting is switched on only when Joshua 
 
 Every placeholder is marked `[TODO JOSHUA: …]` in the code. Open at the time of writing:
 
-- [ ] **Home page:** headline, intro line, heading above the copy, page title and description (`content/copy.ts`)
+- [x] **Home page:** headline, intro line, heading above the copy, page title and description (`content/copy.ts`)
 - [ ] **Panel figures:** wording with "in the long run" (`content/copy.ts`)
 - [ ] **Footer:** links and contact link (`content/copy.ts`)
 - [ ] **Edge-case copy:** lookup errors, Speaker, vacant seat, no email, no postal address (`content/copy.ts`)

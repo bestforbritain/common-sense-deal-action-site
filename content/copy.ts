@@ -9,8 +9,8 @@
 
 export const copy = {
   meta: {
-    title: "[TODO JOSHUA: page title] | A ‘Common Sense’ Deal with Europe",
-    description: "[TODO JOSHUA: one-line description for search results and link previews]",
+    title: "Write to your MP or the Minister | A ‘Common Sense’ Deal with Europe",
+    description: "Tell them why EU membership is common sense for your business.",
   },
 
   skipLink: "Skip to content",
@@ -21,8 +21,8 @@ export const copy = {
   },
 
   home: {
-    headline: "[TODO JOSHUA: headline]",
-    intro: "[TODO JOSHUA: one line of intro]",
+    headline: "Write to your MP or the Minister",
+    intro: "Tell them why EU membership is common sense for your business",
 
     form: {
       heading: "Find your MP",
@@ -40,7 +40,7 @@ export const copy = {
     },
 
     why: {
-      heading: "[TODO JOSHUA: heading for the copy below the form, e.g. “Why EU membership is common sense”]",
+      heading: "Why EU membership is common sense",
       // Block 1, verbatim from the brief except the £92bn sentence, changed on
       // 26 November 2026 to say "in the long run". [TODO JOSHUA: approve this wording]
       paragraphs: [

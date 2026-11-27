@@ -9,8 +9,9 @@ export default function HomePage() {
   return (
     <>
       <section className={styles.hero}>
-        <h1>{home.headline}</h1>
-        <p className={styles.intro}>{home.intro}</p>
+        <h1>
+          <RichText text={home.headline} />
+        </h1>
         <FindMpForm />
       </section>
 
@@ -24,13 +25,6 @@ export default function HomePage() {
         <p className={styles.source}>
           <a href={home.why.sourceUrl}>{home.why.sourceLabel}</a>
         </p>
-
-        <p className={styles.prompt}>
-          <RichText text={home.below.prompt} />
-        </p>
-        <a href="#find-mp" className={styles.promptLink}>
-          {home.below.promptLink}
-        </a>
       </section>
     </>
   );

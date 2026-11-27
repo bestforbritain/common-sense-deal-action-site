@@ -21,8 +21,8 @@ export const copy = {
   },
 
   home: {
-    headline: "Write to your MP or the Minister",
-    intro: "Tell them why EU membership is common sense for your business",
+    // Rendered with the styled campaign name in place of {csd}.
+    headline: "Tell your MP what a {csd} would mean for your business.",
 
     form: {
       heading: "Find your MP",
@@ -57,11 +57,6 @@ export const copy = {
       sourceUrl: "https://bestforbritain.org/publication/eu-uk-integration/",
     },
 
-    below: {
-      // [TODO JOSHUA: approve] The prompt that takes people back to the form.
-      prompt: "Tell your MP what a {csd} would mean for your business.",
-      promptLink: "Find my MP",
-    },
   },
 
   footer: {

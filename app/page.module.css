@@ -18,13 +18,8 @@
 }
 
 .hero h1 {
-  max-width: 14em;
-}
-
-.intro {
-  max-width: var(--measure);
+  max-width: 16em;
   margin-bottom: 2rem;
-  font-size: 1.125rem;
 }
 
 .copy > * {
@@ -37,31 +32,7 @@
 }
 
 .source.source {
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
   font-size: 0.9375rem;
 }
 
-.prompt.prompt {
-  margin-top: 2.5rem;
-  font-size: var(--text-h2);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: var(--tracking-tight);
-}
-
-.promptLink {
-  display: inline-flex;
-  align-items: center;
-  min-height: 3.75rem;
-  padding: 0 2.2rem;
-  background: var(--colour-red);
-  color: var(--colour-white);
-  font-size: var(--text-button);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.promptLink:hover {
-  background: var(--colour-red-dark);
-  color: var(--colour-white);
-}

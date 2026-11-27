@@ -3,6 +3,7 @@
  *
  * - `{csd}` renders the campaign name, ‘COMMON SENSE’ DEAL, in the live site's style
  *   (see components/CampaignName.tsx).
+ * - `[[words]]` puts the same red block around those words (see components/RichText.tsx).
  * - Anything marked [TODO JOSHUA: …] is a placeholder or a draft awaiting sign-off.
  *   Placeholders are shown on the page so they can't slip through unnoticed.
  */
@@ -47,11 +48,11 @@ export const copy = {
       paragraphs: [
         "If you run a business you’ll find that buying and selling parts, or selling your finished products, becomes faster and cheaper if the UK and the EU agree a {csd}. There will be fewer forms to fill in and transport costs will go down - mostly because ports like Dover won’t be bogged down with paperwork.",
         "Red tape moving car parts from Germany shouldn’t cost jobs at car plants in Luton. British goods destined for French shops shouldn’t get stuck for twenty hours at Dover. And you shouldn’t be stopped from working or travelling in places like Paris, Barcelona, or Berlin.",
-        "It’s just common sense.",
+        "[[It’s just common sense.]]",
         "Our current deal with the EU is causing too much hassle for ordinary people and business owners.",
         "By rejoining the EU we can get rid of this unnecessary hassle. We can return freedom of movement. We can supercharge the UK economy and drive costs down.",
         "EU membership could deliver at least £92bn in economic growth in the long run, and £43bn in additional exports each and every year.",
-        "It’s just common sense.",
+        "[[It’s just common sense.]]",
       ],
       sourceLabel: "Source: Frontier Economics for Best for Britain",
       sourceUrl: "https://bestforbritain.org/publication/eu-uk-integration/",
